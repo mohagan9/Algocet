@@ -10,7 +10,7 @@ This is a .NET Core 2.1 application using syntax trees and the Roslyn compiler.
 There are three main sub-projects:
 
  - <b>Algocet:</b> Generates a solution in the form of a CSharpSyntaxTree for a given problem.
- - <b>AlgocetConsole:</b> A CLI that takes a problem statement and saves the C# solution to a text file.
+ - <b>AlgocetConsole:</b> Reads a problem statement and saves the C# solution to a text file.
  - <b>CodingChallenges:</b> A test project to verify that Algocet is producing the correct solutions.
  
  Each problem statement is composed of <b>functions</b> and optional <b>constraints</b>.
