@@ -15,18 +15,7 @@ There are three main sub-projects:
  
  Each problem statement is composed of <b>functions</b> and optional <b>constraints</b>.
  
- <h2>Functions</h2>
- 
- <table>
- <tbody>
- <tr><td><b>Name</b></td><td><b>Description</b></td><td><b>Input</b></td><td><b>Output</b></td><td><b>Constraints</b></td><td><b>Requirement</b></td></tr>
- <tr><td>MAX</td><td>Returns the maximum element</td><td>int[]</td><td>int</td><td>Positive, Negative</td><td>-</td></tr>
- <tr><td>MIN</td><td>Returns the minimum element</td><td>int[]</td><td>int</td><td>Positive, Negative</td><td>-</td></tr>
- <tr><td>SUM</td><td>Returns the sum of the elements</td><td>int[]</td><td>int</td><td>Positive, Negative</td><td>-</td></tr>
- <tr><td>UNPAIRED</td><td>Returns the element that has no matching pair</td><td>int[]</td><td>int</td><td>Positive, Negative</td><td>There must be exactly one unpaired element in the array</td></tr>
- <tr><td>COMPLEMENT</td><td>Returns an array with the values not present in the input</td><td>int[]</td><td>int[]</td><td>Positive</td><td>Elements are in the range of -1,000,000 to 1,000,000</td></tr>
- </tbody>
- </table>
+ Have a look at the Wiki for more information.
 
  
 
