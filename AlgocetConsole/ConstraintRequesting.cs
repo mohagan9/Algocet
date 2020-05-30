@@ -1,6 +1,8 @@
 ﻿using Algocet.Constraints;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
 
 namespace AlgocetConsole
 {
@@ -17,7 +19,11 @@ namespace AlgocetConsole
             string constraintInput = RequestConstraint();
             if (constraintMap.ContainsKey(constraintInput))
             {
-                return (Constraint)Activator.CreateInstance(constraintMap[constraintInput]);
+                return (Constraint)Activator.CreateInstance(constraintMap[constraintInput],
+                    BindingFlags.CreateInstance |
+                    BindingFlags.Public |
+                    BindingFlags.Instance |
+                    BindingFlags.OptionalParamBinding, null, new object[] { }, CultureInfo.CurrentCulture);
             }
             return null;
         }

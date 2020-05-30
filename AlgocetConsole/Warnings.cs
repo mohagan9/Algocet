@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AlgocetConsole
 {
-    public static class ConsolePrinting
+    public static class Warnings
     {
         public static void PrintInvalidInputMessage(string type, IEnumerable<string> validCollection)
         {
