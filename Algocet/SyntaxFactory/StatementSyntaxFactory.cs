@@ -23,5 +23,15 @@ namespace Algocet.SyntaxFactory
         {
             return (IfStatementSyntax)MicrosoftSyntaxFactory.ParseStatement(snippet);
         }
+
+        public static ReturnStatementSyntax CreateReturnStatement(string snippet)
+        {
+            return (ReturnStatementSyntax)MicrosoftSyntaxFactory.ParseStatement(snippet);
+        }
+
+        public static StatementSyntax CreateEmptyGuard(int returnValue)
+        {
+            return MicrosoftSyntaxFactory.ParseStatement($"if (A.Length == 0) return {returnValue};");
+        }
     }
 }

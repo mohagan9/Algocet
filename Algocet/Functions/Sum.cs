@@ -9,7 +9,7 @@ namespace Algocet.Functions
 {
     public class Sum : Function
     {
-        protected override string SOLUTION_SNIPPET => "register += A[i];";
+        protected string SOLUTION_SNIPPET => "registerSum += A[i];";
 
         public Sum()
         {
@@ -25,11 +25,13 @@ namespace Algocet.Functions
 
         protected override void Initialise()
         {
-            Method = MethodSyntaxFactory.CreateDefault();
-            RegisterDeclarations = new List<FieldDeclarationSyntax> { RegisterSyntaxFactory.DeclareInt() };
+            SyntaxProvider = new SyntaxProvider(GetType().Name);
+
+            Method = SyntaxProvider.CreateDefaultMethod();
+            RegisterDeclarations = new List<FieldDeclarationSyntax> { SyntaxProvider.DeclareInt() };
             RegisterStatements = new List<StatementSyntax> {
-                GuardSyntaxFactory.CreateEmptyGuard(0),
-                RegisterSyntaxFactory.InitialiseTo(0)
+                StatementSyntaxFactory.CreateEmptyGuard(0),
+                SyntaxProvider.InitialiseTo(0)
             };
             ForLoops = new List<ForStatementSyntax>
             {

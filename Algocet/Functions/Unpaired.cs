@@ -31,24 +31,26 @@ namespace Algocet.Functions
 
         protected override void Initialise()
         {
-            Method = MethodSyntaxFactory.CreateDefault();
-            RegisterDeclarations = new List<FieldDeclarationSyntax> { RegisterSyntaxFactory.DeclareInt() };
+            SyntaxProvider = new SyntaxProvider(GetType().Name);
+
+            Method = SyntaxProvider.CreateDefaultMethod();
+            RegisterDeclarations = new List<FieldDeclarationSyntax> { SyntaxProvider.DeclareInt() };
             if (mode == Mode.NATURAL)
             {
-                RegisterStatements = new List<StatementSyntax> { RegisterSyntaxFactory.InitialiseToArrayLengthPlus(1) };
+                RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseToArrayLengthPlus(1) };
                 ForLoops = new List<ForStatementSyntax>
                 {
                     StatementSyntaxFactory.CreateForLoop(0).
-                    WithStatement(MicrosoftSyntaxFactory.ParseStatement("register ^= (A[i] ^ (i+1));"))
+                    WithStatement(MicrosoftSyntaxFactory.ParseStatement($"{SyntaxProvider.REGISTER} ^= (A[i] ^ (i+1));"))
                 };
             }
             else
             {
-                RegisterStatements = new List<StatementSyntax> { RegisterSyntaxFactory.InitialiseTo(0) };
+                RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseTo(0) };
                 ForLoops = new List<ForStatementSyntax>
                 {
                     StatementSyntaxFactory.CreateForLoop(0).
-                    WithStatement(MicrosoftSyntaxFactory.ParseStatement("register ^= A[i];"))
+                    WithStatement(MicrosoftSyntaxFactory.ParseStatement($"{SyntaxProvider.REGISTER} ^= A[i];"))
                 };
             }
             Body = RegisterStatements.Concat(ForLoops).ToList();
