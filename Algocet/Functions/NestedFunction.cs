@@ -5,46 +5,31 @@ using MicrosoftSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Algocet.Functions
 {
-    public class NestedFunction : Function
+    public class NestedFunction
     {
-        private readonly Function parent, child;
+        public readonly Function Parent, Child;
 
         public NestedFunction(Function parent, Function child)
         {
-            this.parent = parent;
-            this.child = child;
-            Initialise();
-        }
+            Parent = parent;
+            Child = child;
 
-        protected override void Initialise()
-        {
-            Method = parent.Method;
+            RenameChildMethod();
 
-            RegisterDeclarations = parent.RegisterDeclarations.
-                Concat(child.RegisterDeclarations).
-                ToList();
-            
-            Body = child.Body.
-                Concat(ReplaceParentInputWithChildOutput()).
-                ToList();
-        }
-
-        private List<StatementSyntax> ReplaceParentInputWithChildOutput()
-        {
-            var updatedStatements = new List<StatementSyntax>();
-            foreach (StatementSyntax statement in parent.Body)
+            Parent.Body = new List<StatementSyntax>
             {
-                updatedStatements.Add(
-                    MicrosoftSyntaxFactory.ParseStatement(
-                        statement.GetText().
-                        ToString().
-                        Replace("A", 
-                        ((IdentifierNameSyntax)
-                        ((ReturnStatementSyntax)child.Method.Body.
-                        Statements.First(s => s.GetType() == typeof(ReturnStatementSyntax))).
-                        Expression).Identifier.Text)));
-            }
-            return updatedStatements;
+                MicrosoftSyntaxFactory.ParseStatement($"A = {Child.GetType().Name}(A);")
+            }.
+            Concat(Parent.Body).
+            ToList();
+        }
+
+        private void RenameChildMethod()
+        {
+            Child.Method = (MethodDeclarationSyntax)MicrosoftSyntaxFactory.ParseMemberDeclaration(
+                            Child.Method.
+                            GetText().ToString().
+                            Replace("solution", Child.GetType().Name));
         }
     }
 }

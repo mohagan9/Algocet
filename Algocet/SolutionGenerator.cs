@@ -1,4 +1,5 @@
 ﻿using Algocet.Functions;
+using Algocet.Rewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -14,10 +15,19 @@ namespace Algocet
             TEMPLATE_TREE = CSharpSyntaxTree.ParseText(CLASS_TEMPLATE);
         }
 
+        public SyntaxTree Generate(NestedFunction function)
+        {
+            return Generate(new NestedSolutionRewriter(function));
+        }
+
         public SyntaxTree Generate(Function function)
         {
-            SolutionRewriter solutionRewriter = new SolutionRewriter(function);
-            CSharpSyntaxNode solution = (CSharpSyntaxNode)solutionRewriter.Visit(TEMPLATE_TREE.GetRoot());
+            return Generate(new SolutionRewriter(function));
+        }
+
+        private SyntaxTree Generate(CSharpSyntaxRewriter rewriter)
+        {
+            var solution = (CSharpSyntaxNode)rewriter.Visit(TEMPLATE_TREE.GetRoot());
             return CSharpSyntaxTree.Create(solution);
         }
     }

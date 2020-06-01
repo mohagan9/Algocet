@@ -15,18 +15,23 @@ namespace CodingChallenges.Util
     {
         private Type solverClass;
         private object solver;
-        private readonly CSharpCompilation compilation;
+        private CSharpCompilation compilation;
 
         public ProblemSolution(Function function)
         {
-            compilation = new SolutionCompiler()
-                .Compile(new SolutionGenerator().Generate(function));
-
-            LoadSolver();
+            LoadSolver(new SolutionGenerator().Generate(function));
         }
 
-        private void LoadSolver()
+        public ProblemSolution(NestedFunction nestedFunction)
         {
+            LoadSolver(new SolutionGenerator().Generate(nestedFunction));
+        }
+
+        private void LoadSolver(SyntaxTree syntaxTree)
+        {
+            compilation = new SolutionCompiler()
+                .Compile(syntaxTree);
+
             using (var ms = new MemoryStream())
             {
                 EmitResult result = compilation.Emit(ms);
