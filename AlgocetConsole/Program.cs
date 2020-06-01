@@ -1,7 +1,9 @@
 ﻿using Algocet;
 using Algocet.Functions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
+using System.Collections.Generic;
 
 namespace AlgocetConsole
 {
@@ -11,10 +13,22 @@ namespace AlgocetConsole
         {
             Console.WriteLine("Welcome to the Code Challenge Cracker!");
 
-            Function function = FunctionRequesting.Request();
+            List<Function> functions = FunctionRequesting.Request();
 
+            SyntaxTree solutionTree;
+            if (functions.Count == 1)
+            {
+                solutionTree = new SolutionGenerator().
+                    Generate(functions[0]);
+            }
+            else
+            {
+                solutionTree = new SolutionGenerator().
+                    Generate(new NestedFunction(functions[0], functions[1]));
+            }
+                
             CSharpCompilation compilation = new SolutionCompiler()
-                .Compile(new SolutionGenerator().Generate(function));
+                .Compile(solutionTree);
 
             SolutionPrinting.PrintToFile(compilation.SyntaxTrees[0]);
             Console.WriteLine("\nSolution saved to file.");

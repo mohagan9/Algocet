@@ -17,26 +17,36 @@ namespace AlgocetConsole
             { "COMPLEMENT", typeof(Complement) }
         };
 
-        public static Function Request()
+        public static List<Function> Request()
         {
-            string functionInput = RequestFunction();
-            while (!FUNCTION_MAP.ContainsKey(functionInput))
+            var functions = new List<Function>();
+            string[] functionInputs = RequestFunctions();
+            foreach (string functionInput in functionInputs)
             {
-                Warnings.PrintInvalidInputMessage("function", FUNCTION_MAP.Keys);
-                functionInput = RequestFunction();
+                if (!FUNCTION_MAP.ContainsKey(functionInput))
+                {
+                    Warnings.PrintInvalidInputMessage("function", FUNCTION_MAP.Keys);
+                    functionInputs = RequestFunctions();
+                    functions = new List<Function>();
+                }
+                else
+                {
+                    functions.Add(CreateFunction(functionInput, new object[] { }));
+                }
             }
             var constraint = ConstraintRequesting.Request();
-            if (constraint == null)
+            if (constraint != null)
             {
-                return CreateFunction(functionInput, new object[] { });
+                int lastIndex = functions.Count - 1;
+                functions[lastIndex] = CreateFunction(functionInputs[lastIndex], new object[] { constraint });
             }
-            return CreateFunction(functionInput, new object[] { constraint });
+            return functions;
         }
 
-        private static string RequestFunction()
+        private static string[] RequestFunctions()
         {
-            Console.WriteLine("\nEnter a function: ");
-            return Console.ReadLine().ToUpper();
+            Console.WriteLine("\nEnter one or two functions: ");
+            return Console.ReadLine().ToUpper().Split(' ');
         }
 
         private static Function CreateFunction(string type, object[] constructorArgs)
