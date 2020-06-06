@@ -1,6 +1,4 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Collections.Generic;
-using System.Linq;
 using MicrosoftSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Algocet.Functions
@@ -9,19 +7,15 @@ namespace Algocet.Functions
     {
         public readonly Function Parent, Child;
 
-        public NestedFunction(Function parent, Function child)
+        public NestedFunction(IParentFunction parent, Function child)
         {
-            Parent = parent;
             Child = child;
 
             RenameChildMethod();
 
-            Parent.Body = new List<StatementSyntax>
-            {
-                MicrosoftSyntaxFactory.ParseStatement($"A = {Child.GetType().Name}(A);")
-            }.
-            Concat(Parent.Body).
-            ToList();
+            parent.ConfigureWith(Child);
+
+            Parent = parent.Function;
         }
 
         private void RenameChildMethod()

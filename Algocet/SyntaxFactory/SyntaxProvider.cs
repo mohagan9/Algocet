@@ -44,7 +44,7 @@ namespace Algocet.SyntaxFactory
             return MicrosoftSyntaxFactory.ParseStatement($"{REGISTER} = A[{index}];");
         }
 
-        public StatementSyntax InitialiseTo(int value)
+        public StatementSyntax InitialiseTo(string value)
         {
             return MicrosoftSyntaxFactory.ParseStatement($"{REGISTER} = {value};");
         }
@@ -56,13 +56,13 @@ namespace Algocet.SyntaxFactory
 
         public MethodDeclarationSyntax CreateDefaultMethod()
         {
-            return CreateMethod("int", "int[] A", REGISTER);
+            return CreateMethod("int", "int[] A", $"return {REGISTER};");
         }
 
-        public MethodDeclarationSyntax CreateMethod(string returnType, string parameters, string returnVariable)
+        public MethodDeclarationSyntax CreateMethod(string returnType, string parameters, string returnStatement)
         {
             return (MethodDeclarationSyntax)MicrosoftSyntaxFactory.
-                ParseMemberDeclaration($"public {returnType} solution({parameters}) {{ return {returnVariable}; }}");
+                ParseMemberDeclaration($"public {returnType} solution({parameters}) {{ {returnStatement} }}");
         }
     }
 }

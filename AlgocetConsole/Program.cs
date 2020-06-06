@@ -11,7 +11,7 @@ namespace AlgocetConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Code Challenge Cracker!");
+            Console.WriteLine("Welcome to Algocet: The Code Challenge Cracker!");
 
             List<Function> functions = FunctionRequesting.Request();
 

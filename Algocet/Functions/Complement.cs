@@ -48,7 +48,7 @@ namespace Algocet.Functions
                 {
                     ForLoops[0],
                     SyntaxProvider.InitialiseIntArray($"{(COUNT + LOWER_BOUND - 1).ToString()} - {REGISTER}"),
-                    SyntaxProvider.InitialiseTo(0),
+                    SyntaxProvider.InitialiseTo("0"),
                     ForLoops[1]
                 }).
                 ToList();   
@@ -67,9 +67,9 @@ namespace Algocet.Functions
             REGISTERS = SyntaxProvider.REGISTERS;
         }
 
-        protected override void Initialise()
+        protected void Initialise()
         {
-            Method = SyntaxProvider.CreateMethod("int[]", "int[] A", REGISTERS);
+            Method = SyntaxProvider.CreateMethod("int[]", "int[] A", $"return {REGISTERS};");
             RegisterDeclarations = new List<FieldDeclarationSyntax>
             {
                 SyntaxProvider.DeclareInt(),
@@ -78,7 +78,7 @@ namespace Algocet.Functions
             };
             RegisterStatements = new List<StatementSyntax>
             {
-                SyntaxProvider.InitialiseTo(0),
+                SyntaxProvider.InitialiseTo("0"),
                 SyntaxProvider.InitialiseBoolArray(COUNT.ToString()),
                 SyntaxProvider.InitialiseIntArray($"{COUNT.ToString()} - A.Length")
             };

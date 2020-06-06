@@ -1,6 +1,7 @@
 ﻿using Algocet.SyntaxFactory;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Algocet.Functions
 {
@@ -14,6 +15,11 @@ namespace Algocet.Functions
         protected List<ForStatementSyntax> ForLoops { get; set; }
         protected SyntaxProvider SyntaxProvider { get; set; }
 
-        protected abstract void Initialise();
+        public ReturnStatementSyntax ReturnStatement => 
+            Method.Body.
+            Statements.AsEnumerable().
+            OfType<ReturnStatementSyntax>().
+            First();
+
     }
 }

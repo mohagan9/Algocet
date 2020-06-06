@@ -7,9 +7,11 @@ using MicrosoftSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Algocet.Functions
 {
-    public class Sum : Function
+    public class Sum : Function, IParentFunction
     {
         protected string SOLUTION_SNIPPET => "registerSum += A[i];";
+
+        public Function Function => this;
 
         public Sum()
         {
@@ -23,7 +25,7 @@ namespace Algocet.Functions
             Body = RegisterStatements.Concat(ForLoops).ToList();
         }
 
-        protected override void Initialise()
+        protected void Initialise()
         {
             SyntaxProvider = new SyntaxProvider(GetType().Name);
 
@@ -31,7 +33,7 @@ namespace Algocet.Functions
             RegisterDeclarations = new List<FieldDeclarationSyntax> { SyntaxProvider.DeclareInt() };
             RegisterStatements = new List<StatementSyntax> {
                 StatementSyntaxFactory.CreateEmptyGuard(0),
-                SyntaxProvider.InitialiseTo(0)
+                SyntaxProvider.InitialiseTo("0")
             };
             ForLoops = new List<ForStatementSyntax>
             {
@@ -39,6 +41,16 @@ namespace Algocet.Functions
                 WithStatement(MicrosoftSyntaxFactory.ParseStatement(SOLUTION_SNIPPET))
             };
             Body = RegisterStatements.Concat(ForLoops).ToList();
+        }
+
+        public void ConfigureWith(Function child)
+        {
+            Body = new List<StatementSyntax>
+            {
+                MicrosoftSyntaxFactory.ParseStatement($"A = {child.GetType().Name}(A);")
+            }.
+            Concat(Body).
+            ToList();
         }
     }
 }

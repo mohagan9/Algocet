@@ -29,7 +29,7 @@ namespace Algocet.Functions
             Body = RegisterStatements.Concat(ForLoops).ToList();
         }
 
-        protected override void Initialise()
+        protected void Initialise()
         {
             SyntaxProvider = new SyntaxProvider(GetType().Name);
 
@@ -46,7 +46,7 @@ namespace Algocet.Functions
             }
             else
             {
-                RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseTo(0) };
+                RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseTo("0") };
                 ForLoops = new List<ForStatementSyntax>
                 {
                     StatementSyntaxFactory.CreateForLoop(0).

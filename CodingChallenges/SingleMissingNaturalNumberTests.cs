@@ -1,6 +1,5 @@
 ﻿using Algocet.Functions;
 using CodingChallenges.Util;
-using System;
 using System.Linq;
 using Xunit;
 using static CodingChallenges.Util.CommonIntegers;
