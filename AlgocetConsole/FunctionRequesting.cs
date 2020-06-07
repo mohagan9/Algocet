@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace AlgocetConsole
@@ -14,39 +15,60 @@ namespace AlgocetConsole
             { "MIN", typeof(Min) },
             { "SUM", typeof(Sum) },
             { "UNPAIRED", typeof(Unpaired) },
-            { "COMPLEMENT", typeof(Complement) }
+            { "COMPLEMENT", typeof(Complement) },
+            { "CHECK", typeof(Check) }
         };
 
         public static List<Function> Request()
         {
             var functions = new List<Function>();
-            string[] functionInputs = RequestFunctions();
-            foreach (string functionInput in functionInputs)
+            IEnumerable<string[]> functionInputs = RequestFunctions();
+                
+            foreach (string[] functionInput in functionInputs)
             {
-                if (!FUNCTION_MAP.ContainsKey(functionInput))
+                string functionName = functionInput.Last();
+
+                if (!FUNCTION_MAP.ContainsKey(functionName))
                 {
                     Warnings.PrintInvalidInputMessage("function", FUNCTION_MAP.Keys);
-                    functionInputs = RequestFunctions();
-                    functions = new List<Function>();
+                    return Request();
+                }
+                else if (functionInput.Length == 1)
+                {
+                    functions.Add(CreateFunction(functionName, new object[] { }));
                 }
                 else
                 {
-                    functions.Add(CreateFunction(functionInput, new object[] { }));
+                    object mode = null;
+                    try
+                    {
+                        mode = ModeRequesting.GetMode(FUNCTION_MAP[functionName], functionInput[0]);
+                    }
+                    catch (ArgumentException e)
+                    {
+                        Warnings.PrintInvalidInputMessage("mode", ModeRequesting.GetModeOptions(FUNCTION_MAP[functionName]));
+                        return Request();
+                    }
+                    functions.Add(CreateFunction(functionName, new object[] { mode }));
                 }
             }
             var constraint = ConstraintRequesting.Request();
             if (constraint != null)
             {
                 int lastIndex = functions.Count - 1;
-                functions[lastIndex] = CreateFunction(functionInputs[lastIndex], new object[] { constraint });
+                string lastFunctionName = functions[lastIndex].GetType().Name.ToUpper();
+                functions[lastIndex] = CreateFunction(lastFunctionName, new object[] { constraint });
             }
             return functions;
         }
 
-        private static string[] RequestFunctions()
+        private static IEnumerable<string[]> RequestFunctions()
         {
             Console.WriteLine("\nEnter one or two functions: ");
-            return Console.ReadLine().ToUpper().Split(' ');
+            return Console.ReadLine().
+                ToUpper().
+                Split(' ').
+                Select(input => input.Split("_"));
         }
 
         private static Function CreateFunction(string type, object[] constructorArgs)

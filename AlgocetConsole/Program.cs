@@ -24,7 +24,7 @@ namespace AlgocetConsole
             else
             {
                 solutionTree = new SolutionGenerator().
-                    Generate(new NestedFunction(functions[0], functions[1]));
+                    Generate(new NestedFunction((IParentFunction)functions[0], functions[1]));
             }
                 
             CSharpCompilation compilation = new SolutionCompiler()
