@@ -62,6 +62,15 @@ namespace CodingChallenges.Util
                 new object[] { A });
         }
 
+        public int Solve(int[] A, int n)
+        {
+            return (int)solverClass.InvokeMember("solution",
+                BindingFlags.InvokeMethod,
+                null,
+                solver,
+                new object[] { A, n });
+        }
+
         public int[] SolveAsArray(int[] A)
         {
             return (int[])solverClass.InvokeMember("solution",

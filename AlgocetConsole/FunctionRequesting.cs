@@ -16,7 +16,8 @@ namespace AlgocetConsole
             { "SUM", typeof(Sum) },
             { "UNPAIRED", typeof(Unpaired) },
             { "COMPLEMENT", typeof(Complement) },
-            { "CHECK", typeof(Check) }
+            { "CHECK", typeof(Check) },
+            { "COUNT", typeof(Count) }
         };
 
         public static List<Function> Request()
