@@ -12,6 +12,7 @@ namespace Algocet.Functions
         protected string SOLUTION_SNIPPET => "registerSum += A[i];";
 
         public Function Function => this;
+        private List<ForStatementSyntax> forLoops;
 
         public Sum()
         {
@@ -21,8 +22,8 @@ namespace Algocet.Functions
         public Sum(Constraint constraint)
         {
             Initialise();
-            ForLoops[0] = ForLoops[0].WithStatement(MicrosoftSyntaxFactory.IfStatement(constraint.Expression, ForLoops[0].Statement));
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            forLoops[0] = forLoops[0].WithStatement(MicrosoftSyntaxFactory.IfStatement(constraint.Expression, forLoops[0].Statement));
+            Body = RegisterStatements.Concat(forLoops).ToList();
         }
 
         protected void Initialise()
@@ -35,12 +36,14 @@ namespace Algocet.Functions
                 StatementSyntaxFactory.CreateEmptyGuard(0),
                 SyntaxProvider.InitialiseTo("0")
             };
-            ForLoops = new List<ForStatementSyntax>
-            {
-                StatementSyntaxFactory.CreateForLoop(0).
-                WithStatement(MicrosoftSyntaxFactory.ParseStatement(SOLUTION_SNIPPET))
-            };
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            forLoops = new List<ForStatementSyntax>
+                {
+                    StatementSyntaxFactory.CreateForLoop(0).
+                    WithStatement(MicrosoftSyntaxFactory.ParseStatement(SOLUTION_SNIPPET))
+                };
+            Body = RegisterStatements.
+                Concat(forLoops).
+                ToList();
         }
 
         public void ConfigureWith(Function child)

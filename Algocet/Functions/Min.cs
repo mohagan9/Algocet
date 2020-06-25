@@ -12,6 +12,7 @@ namespace Algocet.Functions
         protected string SOLUTION_SNIPPET => "if (A[i] < registerMin) { registerMin = A[i]; }";
 
         public Function Function => this;
+        private List<ForStatementSyntax> forLoops;
 
         public Min()
         {
@@ -26,8 +27,8 @@ namespace Algocet.Functions
             {
                 RegisterStatements[0] = SyntaxProvider.InitialiseTo(int.MaxValue.ToString());
             }
-            ForLoops[0] = ForLoops[0].WithStatement(constraint.Apply((IfStatementSyntax)ForLoops[0].Statement));
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            forLoops[0] = ForLoops[0].WithStatement(constraint.Apply((IfStatementSyntax)forLoops[0].Statement));
+            Body = RegisterStatements.Concat(forLoops).ToList();
         }
 
         protected void Initialise()
@@ -37,12 +38,14 @@ namespace Algocet.Functions
             Method = SyntaxProvider.CreateDefaultMethod();
             RegisterDeclarations = new List<FieldDeclarationSyntax> { SyntaxProvider.DeclareInt() };
             RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseToElementAt(0) };
-            ForLoops = new List<ForStatementSyntax>
-            {
-                StatementSyntaxFactory.CreateForLoop(0).
-                WithStatement(StatementSyntaxFactory.CreateIfStatement(SOLUTION_SNIPPET))
-            };
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            forLoops = new List<ForStatementSyntax>
+                {
+                    StatementSyntaxFactory.CreateForLoop(0).
+                    WithStatement(StatementSyntaxFactory.CreateIfStatement(SOLUTION_SNIPPET))
+                };
+            Body = RegisterStatements.
+                Concat(forLoops).
+                ToList();
         }
 
         public void ConfigureWith(Function child)

@@ -14,6 +14,7 @@ namespace Algocet.Functions
             DEFAULT, NATURAL
         }
         private readonly Mode mode;
+        private List<ForStatementSyntax> forLoops;
 
         public Unpaired(Mode mode = Mode.DEFAULT)
         {
@@ -25,8 +26,8 @@ namespace Algocet.Functions
         {
             this.mode = mode;
             Initialise();
-            ForLoops[0] = ForLoops[0].WithStatement(MicrosoftSyntaxFactory.IfStatement(constraint.Expression, ForLoops[0].Statement));
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            forLoops[0] = forLoops[0].WithStatement(MicrosoftSyntaxFactory.IfStatement(constraint.Expression, forLoops[0].Statement));
+            Body = RegisterStatements.Concat(forLoops).ToList();
         }
 
         protected void Initialise()
@@ -38,7 +39,7 @@ namespace Algocet.Functions
             if (mode == Mode.NATURAL)
             {
                 RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseToArrayLengthPlus(1) };
-                ForLoops = new List<ForStatementSyntax>
+                forLoops = new List<ForStatementSyntax>
                 {
                     StatementSyntaxFactory.CreateForLoop(0).
                     WithStatement(MicrosoftSyntaxFactory.ParseStatement($"{SyntaxProvider.REGISTER} ^= (A[i] ^ (i+1));"))
@@ -47,13 +48,13 @@ namespace Algocet.Functions
             else
             {
                 RegisterStatements = new List<StatementSyntax> { SyntaxProvider.InitialiseTo("0") };
-                ForLoops = new List<ForStatementSyntax>
+                forLoops = new List<ForStatementSyntax>
                 {
                     StatementSyntaxFactory.CreateForLoop(0).
                     WithStatement(MicrosoftSyntaxFactory.ParseStatement($"{SyntaxProvider.REGISTER} ^= A[i];"))
                 };
             }
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            Body = RegisterStatements.Concat(forLoops).ToList();
         }
     }
 }

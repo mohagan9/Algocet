@@ -17,6 +17,8 @@ namespace Algocet.Functions
         protected string FLAG_SNIPPET { get; set; }
         protected string SOLUTION_SNIPPET => $"if (!{FLAGS}[i]) {{ {REGISTERS}[{REGISTER}] = i{LOWER_BOUND.ToString()}; {REGISTER}++; }}";
 
+        private List<ForStatementSyntax> forLoops;
+
         public Complement(int lowerBound = -1000000, int count = 2000001)
         {
             LOWER_BOUND = lowerBound;
@@ -40,16 +42,16 @@ namespace Algocet.Functions
                 Initialise();
 
                 RegisterStatements.RemoveAt(2);
-                ForLoops[1] = StatementSyntaxFactory.
+                forLoops[1] = StatementSyntaxFactory.
                     CreateForLoop(-LOWER_BOUND + 1, $"< {FLAGS}.Length && {REGISTER} < {REGISTERS}.Length").
                     WithStatement(MicrosoftSyntaxFactory.ParseStatement(SOLUTION_SNIPPET));
 
                 Body = RegisterStatements.Concat(new List<StatementSyntax>
                 {
-                    ForLoops[0],
+                    forLoops[0],
                     SyntaxProvider.InitialiseIntArray($"{(COUNT + LOWER_BOUND - 1).ToString()} - {REGISTER}"),
                     SyntaxProvider.InitialiseTo("0"),
-                    ForLoops[1]
+                    forLoops[1]
                 }).
                 ToList();   
             }
@@ -82,14 +84,16 @@ namespace Algocet.Functions
                 SyntaxProvider.InitialiseBoolArray(COUNT.ToString()),
                 SyntaxProvider.InitialiseIntArray($"{COUNT.ToString()} - A.Length")
             };
-            ForLoops = new List<ForStatementSyntax>
+            forLoops = new List<ForStatementSyntax>
             {
                 StatementSyntaxFactory.CreateForLoop(0).
                 WithStatement(MicrosoftSyntaxFactory.ParseStatement(FLAG_SNIPPET)),
                 StatementSyntaxFactory.CreateForLoop(0, $"< {FLAGS}.Length").
                 WithStatement(MicrosoftSyntaxFactory.ParseStatement(SOLUTION_SNIPPET))
             };
-            Body = RegisterStatements.Concat(ForLoops).ToList();
+            Body = RegisterStatements.
+                Concat(forLoops).
+                ToList();
         }
     }
 }

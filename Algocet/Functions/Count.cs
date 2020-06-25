@@ -14,21 +14,21 @@ namespace Algocet.Functions
             Initialise();
         }
 
-        public void Initialise()
+        protected void Initialise()
         {
             SyntaxProvider = new SyntaxProvider(GetType().Name);
 
             Method = SyntaxProvider.CreateMethod("int", "int[] A, int subject", $"return registersCount[subject + {CAPACITY / 2}];");
             RegisterDeclarations = new List<FieldDeclarationSyntax> { SyntaxProvider.DeclareIntArray() };
-            ForLoops = new List<ForStatementSyntax>
+            RegisterStatements = new List<StatementSyntax>
             {
-                StatementSyntaxFactory.CreateForLoop(0).
-                WithStatement(MicrosoftSyntaxFactory.ParseStatement($"registersCount[A[i] + {CAPACITY / 2}]++;"))
+                SyntaxProvider.InitialiseIntArray(CAPACITY.ToString())
             };
             Body = new List<StatementSyntax>
             {
-                SyntaxProvider.InitialiseIntArray(CAPACITY.ToString()),
-                ForLoops[0]
+                RegisterStatements[0],
+                StatementSyntaxFactory.CreateForLoop(0).
+                WithStatement(MicrosoftSyntaxFactory.ParseStatement($"registersCount[A[i] + {CAPACITY / 2}]++;"))
             };
         }
     }
