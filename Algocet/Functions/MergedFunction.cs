@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Algocet.Merger;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +17,8 @@ namespace Algocet.Functions
             Parent = parent;
             Child = child;
 
-            Method = MergeMethods(
-                GetParentInputName(child.Method.ReturnType.GetType()));
-
+            Method = new MethodMerger(parent, child).Merge();
+            
             RegisterDeclarations = parent.RegisterDeclarations.
                 Concat(child.RegisterDeclarations).
                 ToList();
@@ -26,34 +27,7 @@ namespace Algocet.Functions
                 Concat(child.RegisterStatements).
                 ToList();
 
-            Body = RegisterStatements.
-                Concat(new List<StatementSyntax>
-                {
-                    parent.ForLoops[0].
-                    WithStatement(MicrosoftSyntaxFactory.Block(
-                        parent.ForLoops[0].Statement,
-                        child.ForLoops[0].Statement))
-                }).
-                ToList();
-        }
-
-        private string GetParentInputName(Type childReturnType)
-        {
-            return Parent.Method.
-                ParameterList.Parameters.
-                First(param => param.Type.GetType() == childReturnType).
-                Identifier.ToString();
-        }
-        
-        private MethodDeclarationSyntax MergeMethods(string parentInputName)
-        {
-            string parentMethodWithUpdatedReturnStatement = Parent.Method.
-                    ToString().
-                    Replace(parentInputName,
-                        ((IdentifierNameSyntax)Child.ReturnStatement.Expression).ToString());
-
-            return ((MethodDeclarationSyntax)MicrosoftSyntaxFactory.ParseMemberDeclaration(parentMethodWithUpdatedReturnStatement)).
-                WithParameterList(Child.Method.ParameterList);
+            Body = new BodyMerger(parent, child, RegisterStatements).Merge();
         }
     }
 }
