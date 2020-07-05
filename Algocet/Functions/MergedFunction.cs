@@ -1,10 +1,8 @@
-﻿using Algocet.Merger;
+﻿using Algocet.Constraints;
+using Algocet.Merger;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using MicrosoftSyntaxFactory = Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Algocet.Functions
 {
@@ -17,17 +15,37 @@ namespace Algocet.Functions
             Parent = parent;
             Child = child;
 
-            Method = new MethodMerger(parent, child).Merge();
+            Initialise();
+        }
+
+        public MergedFunction(Function parent, Function child, Constraint constraint)
+        {
+            Parent = parent;
+            Child = child;
+
+            Initialise();
+
+            var forLoop = ForLoops[0];
+            var forBlock = (BlockSyntax)forLoop.Statement;
+            var ifStatement = forBlock.Statements.OfType<IfStatementSyntax>().First();
+            forBlock = forBlock.ReplaceNode(ifStatement, constraint.Apply(ifStatement));
             
-            RegisterDeclarations = parent.RegisterDeclarations.
-                Concat(child.RegisterDeclarations).
+            Body[Body.IndexOf(forLoop)] = forLoop.WithStatement(forBlock);
+        }
+
+        protected void Initialise()
+        {
+            Method = new MethodMerger(Parent, Child).Merge();
+
+            RegisterDeclarations = Parent.RegisterDeclarations.
+                Concat(Child.RegisterDeclarations).
                 ToList();
 
-            RegisterStatements = parent.RegisterStatements.
-                Concat(child.RegisterStatements).
+            RegisterStatements = Parent.RegisterStatements.
+                Concat(Child.RegisterStatements).
                 ToList();
 
-            Body = new BodyMerger(parent, child, RegisterStatements).Merge();
+            Body = new BodyMerger(Parent, Child, RegisterStatements).Merge();
         }
     }
 }

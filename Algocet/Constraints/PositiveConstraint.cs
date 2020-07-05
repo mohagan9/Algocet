@@ -8,9 +8,6 @@ namespace Algocet.Constraints
 {
     public class PositiveConstraint : Constraint
     {
-        protected override CSharpSyntaxRewriter CSharpSyntaxRewriter { get; }
-        public override ExpressionSyntax Expression { get; }
-
         public PositiveConstraint(string valueExpression = "A[i]")
         {
             Expression = MicrosoftSyntaxFactory.ParseExpression($"{valueExpression} > 0");

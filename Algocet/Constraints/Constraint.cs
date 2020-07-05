@@ -5,8 +5,8 @@ namespace Algocet.Constraints
 {
     public abstract class Constraint
     {
-        protected abstract CSharpSyntaxRewriter CSharpSyntaxRewriter { get; }
-        public abstract ExpressionSyntax Expression { get; }
+        protected CSharpSyntaxRewriter CSharpSyntaxRewriter { get; set; }
+        public ExpressionSyntax Expression { get; protected set; }
 
         public virtual IfStatementSyntax Apply(IfStatementSyntax solutionStatement)
         {

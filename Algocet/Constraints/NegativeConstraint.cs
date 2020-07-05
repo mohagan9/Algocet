@@ -8,9 +8,6 @@ namespace Algocet.Constraints
 {
     public class NegativeConstraint : Constraint
     {
-        protected override CSharpSyntaxRewriter CSharpSyntaxRewriter { get; }
-        public override ExpressionSyntax Expression { get; }
-
         public NegativeConstraint()
         {
             Expression = MicrosoftSyntaxFactory.ParseExpression("A[i] < 0");
