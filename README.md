@@ -1,3 +1,10 @@
+# Deprecated
+
+Thankfully AI / LLMs have finally ended coding challenges as standard interview practice.
+
+-------
+
+
 ![alt text](https://github.com/mohagan9/Algocet/blob/master/algocet-logo.png?raw=true)
 
 The goal of Algocet is to solve coding challenges. 
